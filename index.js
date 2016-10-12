@@ -1,8 +1,29 @@
 var nunjucks = require('nunjucks')
 var loaderUtils = require('loader-utils')
 
-function createLoader(searchPaths) {
-  return new nunjucks.FileSystemLoader(searchPaths || ['.'])
+// define a WebpackLoader that wraps a Nunjuck loader and tracks dependencies
+function WebpackLoader(loader, nunjucksLoader) {
+  this.loader = loader
+  this.nunjucksLoader = nunjucksLoader
+}
+
+WebpackLoader.prototype.getSource = function(name) {
+  var source = this.nunjucksLoader.getSource(name)
+  if (source) {
+    this.loader.addDependency(source.path)
+  }
+  return source
+}
+
+// wrap all nunjucks loaders in our WebpackLoader
+function prepareLoaders(webpackLoader, loaders) {
+  if (!loaders) {
+    loaders = [new nunjucks.FileSystemLoader(['.'])]
+  }
+
+  return loaders.map(function(loader) {
+    return new WebpackLoader(webpackLoader, loader)
+  })
 }
 
 module.exports = function(source) {
@@ -11,7 +32,8 @@ module.exports = function(source) {
   var query = loaderUtils.parseQuery(this.query)
 
   var opts = query.envOpts || { autoescape: query.autoescape || true }
-  var env = new nunjucks.Environment(query.loaders || createLoader(query.searchPaths), opts)
+  var env = new nunjucks.Environment(
+    prepareLoaders(this, query.loaders), opts)
 
   // configure filter to collect all required assets
   var dependencies = []
