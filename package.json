@@ -1,0 +1,25 @@
+{
+  "name": "nunjucks-static-loader",
+  "version": "0.0.1",
+  "description": "Webpack loader for static nunjucks templates (works great with html-webpack-plugin)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/federicobond/nunjucks-static-loader.git"
+  },
+  "keywords": [
+    "webpack",
+    "nunjucks",
+    "static",
+    "loader"
+  ],
+  "author": "Federico Bond",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/federicobond/nunjucks-static-loader/issues"
+  },
+  "homepage": "https://github.com/federicobond/nunjucks-static-loader#readme"
+}
